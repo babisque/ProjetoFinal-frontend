@@ -8,17 +8,21 @@ import { CursosService } from './cursos.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CursosComponent } from './components/cursos/cursos.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CursosComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     CommonModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModule
   ],
   providers: [HttpClientModule, CursosService],
   bootstrap: [AppComponent]

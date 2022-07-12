@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Curso } from './Curso';
@@ -17,8 +17,8 @@ export class CursosService {
 
   constructor(private http: HttpClient) { }
 
-  PegarTodos(): Observable<Curso[]> {
-    return this.http.get<Curso[]>(this.url);
+  PegarTodos(): Observable<HttpResponse<Curso[]>> {
+    return this.http.get<Curso[]>(this.url, { observe: 'response' });
   }
 
   PegarPorId(cursoId: number): Observable<Curso> {
@@ -27,14 +27,15 @@ export class CursosService {
   }
 
   SalvarCurso(curso: Curso): Observable<any> {
-    return this.http.post<Curso>(this.url, curso, httpOpts);
+    return this.http.post<Curso>(this.url, curso, {observe: 'response' as 'body'});
   }
 
-  AtualizarCurso(curso: Curso): Observable<any>{
-    return this.http.put<Curso>(this.url, curso, httpOpts);
+  AtualizarCurso(curso: Curso, cursoId: number): Observable<any> {
+    const apiUrl = `${this.url}/${cursoId}`
+    return this.http.put<Curso>(apiUrl, curso, httpOpts);
   }
 
-  ExcluirPessoa(cursoId: number): Observable<any>{
+  ExcluirCurso(cursoId: number): Observable<any> {
     const apiUrl = `${this.url}/${cursoId}`;
     return this.http.delete<number>(apiUrl, httpOpts);
   }
