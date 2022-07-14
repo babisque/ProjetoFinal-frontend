@@ -2,6 +2,8 @@ import { CursosService } from './../../cursos.service';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Curso } from 'src/app/Curso';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-cursos',
@@ -16,14 +18,11 @@ export class CursosComponent implements OnInit {
   visibilidadeTabela: boolean = true;
   visibilidadeFormulario: boolean = false;
 
-  constructor(private cursosService: CursosService) { }
+  constructor(private cursosService: CursosService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.cursosService.PegarTodos().subscribe(resultado => {
       this.cursos = resultado.body;
-      console.log(resultado.headers);
-      console.log(resultado.status);
-      console.log(resultado.statusText);
     });
   }
 
@@ -77,23 +76,45 @@ export class CursosComponent implements OnInit {
     }
     else {
       curso.status = true;
-      this.cursosService.SalvarCurso(curso).subscribe((resultado: Response) => {
-        this.visibilidadeFormulario = false;
-        this.visibilidadeTabela = true;
-        console.log(resultado.headers);
-        console.log(resultado.status);
-        console.log(resultado.statusText);
-        alert(`Curso ${curso.nome} inserido com sucesso`);
-        this.cursosService.PegarTodos().subscribe(reg => {
-          this.cursos = reg.body;
-        });
-      });
+      this.cursosService.SalvarCurso(curso).subscribe(
+        data => {
+          this.cursosService.PegarTodos().subscribe(response => {
+            this.cursos = response.body;
+          });
+
+          this.visibilidadeFormulario = false;
+          this.visibilidadeTabela = true;
+
+          this.toastr.success(`${curso.nome} foi incluído com sucesso.`, "Curso incluído com sucesso.", {
+            "closeButton": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "easing": "swing",
+          });
+        },
+        error => {
+          this.toastr.error(`${error.error}`, 'Não foi possível adicionar este curso.', {
+            "closeButton": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "easing": "swing",
+          })
+        }
+      );
     }
   }
 
   ExcluirCurso(cursoId: number): void {
     this.cursosService.ExcluirCurso(cursoId).subscribe(resultado => {
-      alert(`Curso deletado com sucesso`);
+      this.toastr.warning('Curso deletado com sucesso!', 'Curso deletado com sucesso.', {
+        "closeButton": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "easing": "swing",
+      })
       this.cursosService.PegarTodos().subscribe(reg => {
         this.cursos = reg.body;
       });
