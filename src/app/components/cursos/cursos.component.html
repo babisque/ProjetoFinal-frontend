@@ -1,0 +1,128 @@
+<div class="container mt-2">
+  <div *ngIf="visibilidadeTabela">
+    <div class="border border-light rounded p-5 d-flex justify-content-between">
+      <div>
+        <button class="btn btn-secondary" type="button" (click)="ExibirFormularioCadastro()">Novo Curso</button>
+      </div>
+    </div>
+
+    <table class="table" *ngIf="cursos">
+      <thead style="background: #242424; color: #F2F2F2;">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nome</th>
+          <th scope="col">Data de inicio</th>
+          <th scope="col">Data término</th>
+          <th scope="col">Vagas</th>
+          <th scope="col">Categoria</th>
+          <th scope="col">Ações</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let curso of cursos">
+        <tr>
+          <th scope="row">{{curso.id}}</th>
+          <td>{{curso.nome}}</td>
+          <td>{{curso.dataInicio}}</td>
+          <td>{{curso.dataTermino}}</td>
+          <td>{{curso.vagas == 0 ? 'Ilimitado' : curso.vagas }}</td>
+          <td><span class="badge bg-primary" style="width: 150px;">{{curso.categoria['nome']}}</span></td>
+          <td>
+            <button class="btn btn-sm btn-outline-info"
+              (click)="ExibirFormularioAtualizacao(curso.id)">Atualizar</button> |
+            <button class="btn btn-sm btn-outline-danger" (click)="ExcluirCurso(curso.id)">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="container py-5" *ngIf="visibilidadeFormulario">
+  <div class="row">
+    <div class="col-lg-7 mx-auto">
+      <div class="bg-white rounded-lg shadow-sm p-5">
+        <form action="" [formGroup]="formulario" (ngSubmit)="EnviarFormulario()">
+          <div class="form-group">
+            <label for="">Nome</label>
+            <input class="form-control" type="text" formControlName="nome" required>
+            <div *ngIf="nome.invalid && (nome.dirty || nome.touched)" class="alert mt-1 mb-2 alert-danger">
+              <div *ngIf="nome.errors?.['required']">
+                O curso deve ter um nome.
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-6">
+              <label for="">Data Inicio</label>
+              <input class="form-control" type="date" formControlName="dataInicio" required>
+            </div>
+
+            <div class="form-group col-6">
+              <label for="">Data Término</label>
+              <input class="form-control" type="date" formControlName="dataTermino" required>
+            </div>
+
+            <div class="col-12">
+              <div class="alert alert-danger mt-1 mb-2"
+                *ngIf="dataInicio.invalid && (dataInicio.dirty || dataInicio.touched)">
+                <div *ngIf="dataInicio.errors?.['required']">
+                  Data de início deve ser incluída.
+                </div>
+              </div>
+
+              <div class="alert alert-danger mt-1 mb-2"
+                *ngIf="dataTermino.invalid && (dataTermino.dirty || dataTermino.touched)">
+                <div *ngIf="dataTermino.errors?.['required']">
+                  Data de finalização do curso deve ser incluído.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-2">
+              <label for="">Vagas</label>
+              <input class="form-control" type="number" formControlName="vagas" required>
+            </div>
+
+            <div class="form-group col-10">
+              <label for="">Categoria</label>
+              <select class="form-select form-select" formControlName="categoriaId" required>
+                <option value="1">Multiplataforma</option>
+                <option value="2">Banco de dados</option>
+                <option value="3">Metodologia</option>
+                <option value="4">Comportamento</option>
+                <option value="5">Comunicação</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <div class="alert alert-danger mt-1 mb-2" *ngIf="vagas.invalid && (vagas.dirty || vagas.touched)">
+                <div *ngIf="vagas.errors?.['required']">
+                  O curso deve ter número de vagas. 0 para vagas ilimitadas.
+                </div>
+              </div>
+
+              <div class="alert alert-danger mt-1 mb-2"
+                *ngIf="categoriaId.invalid && (categoriaId.dirty || categoriaId.touched)">
+                <div *ngIf="categoriaId.errors?.['required']">
+                  O curso precisa ter uma categoria.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex mt-4 flex-row-reverse">
+            <div>
+              <button class="btn btn btn-outline-success ms-2" type="submit">Salvar</button>
+            </div>
+            <div class="pl-1">
+              <button class="btn btn btn-outline-danger" type="button" (click)="Voltar()">Voltar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

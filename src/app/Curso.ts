@@ -1,9 +1,10 @@
 export class Curso {
   id: number;
   nome: string;
-  dataInicio: Date;
-  dataTermino: Date;
+  dataInicio: string;
+  dataTermino: string;
   vagas: number;
   status: boolean;
   categoriaId: number;
+  categoria: string;
 }

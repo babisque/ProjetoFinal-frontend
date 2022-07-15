@@ -1,4 +1,6 @@
+import { ToastrConfig } from './../../node_modules/ngx-toastr/toastr/toastr-config.d';
 import { Component } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
