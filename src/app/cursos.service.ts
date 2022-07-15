@@ -27,7 +27,7 @@ export class CursosService {
   }
 
   SalvarCurso(curso: Curso): Observable<any> {
-    return this.http.post<Curso>(this.url, curso, {observe: 'response' as 'body'});
+    return this.http.post<Curso>(this.url, curso, httpOpts);
   }
 
   AtualizarCurso(curso: Curso, cursoId: number): Observable<any> {
